@@ -1,8 +1,7 @@
 # homework 5 cmake build configuration
 
 # sources to include in the homework library
-set(SOURCES )
-
+set(SOURCES validator.cpp token.cpp)
 set(LIBRARY_NAME hw05)
 set(EXECUTABLE_NAME runhw05)
 

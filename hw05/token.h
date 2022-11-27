@@ -15,12 +15,13 @@ struct Identifier {
   std::string name;
 };
 
-/*
- * TODO: all the tokens go between here
- */
-/*
- * ... and here
- */
+struct From {};
+
+struct Comma {};
+
+struct Semicolon {};
+
+struct Asterisks {};
 } // namespace token
 
 /// Simple class representing a token for our simplified SQL select clause. A token be any of the
@@ -29,7 +30,7 @@ class Token {
 public:
   /// TODO: Add all types of token to the variant
   using token_type =
-      std::variant<token::Select, token::Identifier>;
+      std::variant<token::Select, token::Identifier, token::From, token::Comma, token::Semicolon, token::Asterisks>;
 
   // Disallow default construction, this doesn't really make sense, what should be a default
   // token? Maybe Unknown, but we don't have that so just disallow it
@@ -38,7 +39,7 @@ public:
   // Construct a token from a variant
   Token(token_type value);
 
-  /// Getter for the underlying variant
+  /// Getter for the underlying variant, the return value should not be discard
   [[nodiscard]]
   token_type value() const;
 
