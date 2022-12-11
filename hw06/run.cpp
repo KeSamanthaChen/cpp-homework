@@ -29,9 +29,11 @@ int main() {
 
   std::cout << "\nLet's do some more math:\n";
 
+  // std::cout << "mmmmmmmmmmmmmmmmmin z: " << y[0]*linalg::min(z) << std::endl;
+
   const auto w{((x * linalg::max(z)) + 5.f) / 3.f};
   const auto v{y * linalg::min(z)};
-
+ 
   const auto floored{linalg::floor(w)};
   const auto ceiled{linalg::floor(w)};
 
