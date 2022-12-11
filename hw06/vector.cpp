@@ -2,6 +2,7 @@
 
 #include <iterator>
 #include <numeric>
+#include <cmath>
 
 
 namespace linalg {
