@@ -8,7 +8,8 @@
 
 namespace net {
     bool is_listening(int fd) {
-        // return true;
+        // reference: https://stackoverflow.com/questions/10260600/check-if-socket-is-listening-in-c
+        // mac has problem here, errono 42
         int val;
         socklen_t len = sizeof(val);
         if (getsockopt(fd, SOL_SOCKET, SO_ACCEPTCONN, &val, &len) == -1) {
@@ -39,9 +40,7 @@ namespace net {
             throw std::runtime_error{"socket is not initialized or closed"};
         }
         
-        // std::cout << "listen sockfd: " << sockfd << std::endl;
         if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
-            std::cout << "setsockopt failed" << std::endl;
             throw std::runtime_error{"setsockopt failed"};
         }
 
@@ -50,12 +49,10 @@ namespace net {
         address.sin_addr.s_addr = INADDR_ANY;
         address.sin_port = htons(port);
         if (bind(sockfd, (struct sockaddr*)&address, sizeof(address)) == -1) {
-            std::cout << "bind failed" << std::endl;
             throw std::runtime_error{"bind failed"};
         }
 
         if (::listen(sockfd, 10) == -1) { // global version
-            std::cout << "listen failed" << std::endl;
             throw std::runtime_error{"listen failed"};
         }
     }
@@ -70,7 +67,7 @@ namespace net {
         socklen_t accept_addr_size = sizeof(accept_addr);
         int new_sockfd = ::accept(sockfd, (struct sockaddr*)&accept_addr, &accept_addr_size);
         Connection cn{std::move(FileDescriptor{new_sockfd})};
-        return cn; // for the server, the new_sockfd is for per connection(client)
+        return cn; // for the server, the new_sockfd is for per connection (client)
     }
 
     Connection Socket::connect(std::string destination, uint16_t port) {
@@ -91,9 +88,8 @@ namespace net {
 
         int client_fd = ::connect(sockfd, res->ai_addr, res->ai_addrlen); // maybe need the loop
         freeaddrinfo(res);
-        // closed problem here
         Connection cn{std::move(FileDescriptor{sockfd})}; // maybe should be sockfd
-        fd_ = std::move(FileDescriptor{});
+        fd_ = std::move(FileDescriptor{}); // close, set fd to be -1
         return cn; // for the client, the client_fd is in no use I guess
     }
 

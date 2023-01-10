@@ -14,7 +14,6 @@ namespace net {
     // it is not a move constructor...
     Connection::Connection(FileDescriptor&& fd) noexcept : fd_(std::move(fd)) {}
 
-    // send string_view data
     void Connection::send(std::string_view data) const {
         net::send(fd(), std::span<const char>(data.data(), data.size()));
     }
