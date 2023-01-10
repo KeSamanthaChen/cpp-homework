@@ -1,6 +1,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h> //sockaddr_in
 #include <iostream>
+#include <cstring> //memeset
 #include <netdb.h> //addrinfo
 #include "socket.h"
 #include "filedescriptor.h"
