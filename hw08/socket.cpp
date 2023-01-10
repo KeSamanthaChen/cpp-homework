@@ -35,6 +35,10 @@ namespace net {
     void Socket::listen(uint16_t port) const {
         int yes = 1;
         int sockfd = fd_.unwrap();
+        if (sockfd == -1) {
+            throw std::runtime_error{"socket is not initialized or closed"};
+        }
+        
         // std::cout << "listen sockfd: " << sockfd << std::endl;
         if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
             std::cout << "setsockopt failed" << std::endl;
@@ -58,7 +62,6 @@ namespace net {
 
     Connection Socket::accept() const {
         int sockfd = fd_.unwrap();
-
         if (!is_listening(sockfd)) {
             throw std::runtime_error{"socket is not listening"};
         }
@@ -71,6 +74,10 @@ namespace net {
     }
 
     Connection Socket::connect(std::string destination, uint16_t port) {
+        int sockfd = fd_.unwrap();
+        if (sockfd == -1) {
+            throw std::runtime_error{"socket is not initialized or closed"};
+        }
         struct addrinfo hints;
         struct addrinfo *res;
 
@@ -82,7 +89,6 @@ namespace net {
         const char * port_char = std::to_string(port).c_str();
         getaddrinfo(hostname, port_char, &hints, &res);
 
-        int sockfd = fd_.unwrap();
         int client_fd = ::connect(sockfd, res->ai_addr, res->ai_addrlen); // maybe need the loop
         freeaddrinfo(res);
         // closed problem here
