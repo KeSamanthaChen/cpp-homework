@@ -22,7 +22,7 @@ namespace net {
 class Connection {
 public:
     /// Take ownership of a file descriptor
-    Connection(FileDescriptor&& fd);
+    Connection(FileDescriptor&& fd) noexcept;
 
     /// Send data from a string_view to the given file descriptor.
     ///

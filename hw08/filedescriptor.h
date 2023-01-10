@@ -33,6 +33,10 @@ public:
 
     // TODO: Implement both copy and move constructors and assignment for the ownership model
     //       described in the class description.
+    FileDescriptor(const FileDescriptor& other) = delete;
+    FileDescriptor& operator=(const FileDescriptor& other) = delete;
+    FileDescriptor(FileDescriptor&& other) noexcept;
+    FileDescriptor& operator=(FileDescriptor&& other) noexcept;
 
     /// Return the underlying file descriptor, if not present return -1 (this is quite standard for
     /// linux systems)
