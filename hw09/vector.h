@@ -168,7 +168,10 @@ private:
      */
     size_t calculate_capacity(size_t new_size) {
         if (_capacity == 0) return new_size;
-        if (_capacity <= new_size) _capacity *= growth_factor;
+        if (_capacity <= new_size) {
+            _capacity *= growth_factor;
+            return _capacity;
+        }
         if (_capacity > new_size) return _capacity;
     } // the capacity must be bigger than size
 
