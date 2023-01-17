@@ -1,20 +1,23 @@
 #pragma once
 
 #include <memory>
-#include <ostream>
+#include <iostream>
 #include <stdexcept>
 
 template <typename T>
 class Vector {
 public:
-    Vector() = default;
+    Vector() : _size(0), _capacity(0) {
+        _data = nullptr;
+    }
 
     /**
      * Creates a vector of size n with values default_val.
      */
     Vector(size_t n, const T& default_val) {
-        _size = n ;
-        _capacity = calculate_capacity(n);
+        _size = n;
+        _capacity = 0;
+        _capacity = calculate_capacity(n);   
         _data = std::make_unique<T[]>(_capacity);
         std::fill(_data.get(), _data.get()+n, default_val);
     }
@@ -24,6 +27,7 @@ public:
      */
     Vector(std::initializer_list<T> l) {
         _size = l.size();
+        _capacity = 0;
         _capacity = calculate_capacity(l.size());
         _data = std::make_unique<T[]>(_capacity); 
         std::copy(l.begin(), l.end(), _data.get()); // or _data.get()
@@ -186,7 +190,10 @@ private:
     void resize(size_t new_capacity) {
         if (_capacity < new_capacity) {
             std::unique_ptr<T[]> _new_data = std::make_unique<T[]>(new_capacity);
-            std::copy(_data.get(), _data.get()+_size, _new_data.get());
+            for (int i=0; i<_size; ++i) {
+                _new_data[i] = std::move(_data[i]);
+            }
+            // std::copy(_data.get(), _data.get()+_size, _new_data.get());
             _data = std::move(_new_data); // original _data is deleted
             _capacity = new_capacity;
             // size remains the same
