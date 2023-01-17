@@ -60,8 +60,8 @@ public:
      */
     Vector& operator=(Vector&& move) noexcept {
         if (&move == this) return *this;
-        _size = std::move(move._size);
-        _capacity = std::move(move._capacity);
+        _size = move._size;
+        _capacity = move._capacity;
         _data = std::move(move._data);
         move._size = 0;
         move._capacity = 0;
