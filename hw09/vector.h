@@ -79,8 +79,7 @@ public:
         if (_capacity > _size) { // capa 4, size 3
             _data[_size] = value; // size 2, 0, 1, 2
             _size++; // new size now
-        }
-        if (_capacity == _size) { // capacity == size == 1
+        } else if (_capacity == _size) { // capacity == size == 1
             resize(calculate_capacity(_size+1)); // capacity == size == 0
             _data[_size] = value;
             _size++;
@@ -94,8 +93,7 @@ public:
         if (_capacity > _size) {
             _data[_size] = std::move(value);
             _size++;
-        }
-        if (_capacity == _size) {
+        } else if (_capacity == _size) {
             resize(calculate_capacity(_size+1)); // calculate_capacity(1)
             _data[_size] = std::move(value);
             _size++;
