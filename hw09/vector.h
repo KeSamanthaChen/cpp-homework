@@ -75,12 +75,12 @@ public:
     /**
      * Appends the given element value to the end of the vector.
      */
-    void push_back(const T& value) {
+    void push_back(const T& value) { // 2 power
         if (_capacity > _size) { // capa 4, size 3
             _data[_size] = value; // size 2, 0, 1, 2
             _size++; // new size now
         }
-        if (_capacity == _size) {
+        if (_capacity == _size) { // capacity == size == 1
             resize(calculate_capacity(_size+1)); // capacity == size == 0
             _data[_size] = value;
             _size++;
@@ -176,10 +176,7 @@ private:
      */
     size_t calculate_capacity(size_t new_size) {
         if (_capacity == 0) return new_size;
-        if (_capacity <= new_size) {
-            _capacity *= growth_factor;
-            return _capacity;
-        }
+        if (_capacity <= new_size) return _capacity*growth_factor;
         if (_capacity > new_size) return _capacity;
     } // the capacity must be bigger than size
 
