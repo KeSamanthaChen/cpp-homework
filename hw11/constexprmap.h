@@ -26,30 +26,51 @@ public:
     using value_type = V;
 
     template<class... Entries>
-    constexpr CexprMap(Entries&&... entries){/*TODO*/}
+    constexpr CexprMap(Entries&&... entries) : values{std::forward<Entries>(entries)...} { // must use {} instead of ()
+        /*TODO*/
+        verify_no_duplicates();
+    } //univesal reference, only one constructor
 
     /**
      * Entry count.
      */
     constexpr size_t size() const {
+        return count;
     }
 
     /**
      * Is the key in the map?
      */
     constexpr bool contains(const K &key) const {
+        for (auto &pair : values) {
+            if (pair.first == key) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
      * Get a key's value
      */
     constexpr const V &get(const K &key) const {
+        for (auto &pair : values) {
+            if (pair.first == key) {
+                return pair.second;
+            }
+        }
+        throw std::out_of_range{"the key does not exist"};
     }
 
     /**
      * Get a key's value by map[key].
      */
     constexpr const V &operator [](const K &key) const {
+        for (auto &pair : values) {
+            if (pair.first == key) {
+                return pair.second;
+            }
+        }
     }
 
 private:
@@ -58,6 +79,13 @@ private:
      * Throws std::invalid_argument on duplicate key.
      */
     constexpr void verify_no_duplicates() const {
+        for (auto &pair : values) {
+            for (auto &pair1: values) {
+                if (pair.first == pair1.first) {
+                    throw std::invalid_argument{"duplicate key in pairs"};
+                }
+            }
+        }
     }
 
     /**
@@ -65,12 +93,18 @@ private:
      *  - `values.end()` if the key is not found.
      */
     constexpr auto find(const K &key) const {
+        for (auto it=values.begin(); it!=values.end(); ++it) {
+            if (it->first == key) {
+                return it;
+            }
+        }
+        return values.end();
     }
 
     /**
      * The entries associated with this map.
      */
-    std::array<std::pair<K, V>, count> values;
+    std::array<std::pair<K, V>, count> values; // what is this count...
 };
 
 
@@ -82,6 +116,7 @@ private:
  */
 template<typename K, typename V, typename... Entries>
 constexpr auto create_cexpr_map(Entries&&... entry) {
+    return CexprMap<K, V, sizeof...(entry)>(std::forward<Entries>(entry)...);
 }
 
 /**
@@ -94,4 +129,4 @@ constexpr auto create_cexpr_map(Entries&&... entry) {
  */
 template<typename Entry, typename... Rest>
 requires std::conjunction_v<std::is_same<Entry, Rest>...>
-CexprMap(Entry, Rest&&...) -> /* TODO */;
+CexprMap(Entry, Rest&&...) -> CexprMap<typename Entry::first_type, typename Entry::second_type, 1+sizeof...(Rest)>;
