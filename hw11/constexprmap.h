@@ -79,9 +79,9 @@ private:
      * Throws std::invalid_argument on duplicate key.
      */
     constexpr void verify_no_duplicates() const {
-        for (auto &pair : values) {
-            for (auto &pair1: values) {
-                if (pair.first == pair1.first) {
+        for (auto it=values.begin(); it!=values.end(); ++it) {
+            for (auto it1=it+1; it1!=values.end(); ++it1) {
+                if (it->first == it1->first) {
                     throw std::invalid_argument{"duplicate key in pairs"};
                 }
             }
