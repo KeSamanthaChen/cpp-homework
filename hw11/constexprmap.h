@@ -66,12 +66,12 @@ public:
      * Get a key's value by map[key].
      */
     constexpr const V &operator [](const K &key) const {
-        // for (auto &pair : values) {
-        //     if (pair.first == key) {
-        //         return pair.second;
-        //     }
-        // }
-        get(key);
+        for (auto &pair : values) {
+            if (pair.first == key) {
+                return pair.second;
+            }
+        }
+        throw std::out_of_range{"the key does not exist"};
     }
 
 private:
