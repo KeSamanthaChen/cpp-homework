@@ -24,7 +24,7 @@ void FileMonitor::start(std::chrono::seconds timeout) {
     auto end = start + timeout;
 
     while (std::chrono::steady_clock::now() < end) {
-        std::this_thread::sleep_for(interval);
+        
         // check for state 
         // new files and changes
         for (auto &file : std::filesystem::recursive_directory_iterator(targetpath)) {
@@ -40,12 +40,13 @@ void FileMonitor::start(std::chrono::seconds timeout) {
         // removed files
         auto it = std::begin(current_files);
         while (it != std::end(current_files)) {
-            if (not std::filesystem::exists(it->first)) {
+            if (std::filesystem::exists(it->first)) {
+                ++it;
+            } else {
                 logger.log(it->first, status::removed);
                 it = current_files.erase(it);
-            } else {
-                ++it;
             }
         }
+        std::this_thread::sleep_for(interval);
     }
 }
