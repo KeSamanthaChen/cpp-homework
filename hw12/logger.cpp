@@ -15,6 +15,10 @@ Logger::Logger(const std::string &filename) : file{} {
         std::filesystem::rename(filename, filename + "_old");
     }
     file.open(filename);
+    if (not file.is_open()) {
+        throw std::runtime_error("open failed");
+    }
+
     std::time_t time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     file << "Commencing logging for directory: "
          << "TODO: insert current path here.."
