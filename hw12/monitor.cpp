@@ -38,13 +38,14 @@ void FileMonitor::start(std::chrono::seconds timeout) {
         }
 
         // removed files
-        for (auto &cfile : current_files) {
-            if (!std::filesystem::exists(cfile.first)) { 
-                logger.log(cfile.first, status::removed);
-                current_files.erase(cfile.first);
+        auto it = std::begin(current_files);
+        while (it != std::end(current_files)) {
+            if (not std::filesystem::exists(it->first)) {
+                logger.log(it->first, status::removed);
+                it = current_files.erase(it);
+            } else {
+                ++it;
             }
         }
-
-        std::this_thread::sleep_for(interval);
     }
 }
