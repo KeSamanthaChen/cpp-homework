@@ -24,7 +24,7 @@ void FileMonitor::start(std::chrono::seconds timeout) {
     auto end = start + timeout;
 
     while (std::chrono::steady_clock::now() < end) {
-
+        std::this_thread::sleep_for(interval);
         // check for state 
         // new files and changes
         for (auto &file : std::filesystem::recursive_directory_iterator(targetpath)) {
